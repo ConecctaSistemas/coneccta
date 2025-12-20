@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Roleta de Prêmios – Indicações</title>
+		<link rel="stylesheet" href="indica.css" />
+		<script src="indica.js" defer></script>
+	</head>
+	<body>
+		<!-- Modal de entrada com dados do cliente -->
+		<div id="clientModal" class="modal-overlay">
+			<div class="modal-content">
+				<h2>Indique e ganhe!</h2>
+				<p>Indique um cliente preenchendo os dados abaixo:</p>
+				<form id="clientForm">
+					<div class="form-group">
+						<label for="clientName">Nome do Cliente *</label>
+						<input type="text" id="clientName" name="clientName" required placeholder="Exemplo: João Silva" />
+					</div>
+					<div class="form-group">
+						<label for="clientCNPJ">CNPJ do Cliente *</label>
+						<input type="text" id="clientCNPJ" name="clientCNPJ" required placeholder="XX.XXX.XXX/XXXX-XX" />
+					</div>
+					<button type="submit" class="modal-btn">Prosseguir</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Popup de resultado da roleta -->
+		<div id="resultModal" class="modal-overlay hidden">
+			<div class="result-modal-content">
+				<div class="fireworks-container" id="fireworksContainer"></div>
+				<h2>Parabéns!</h2>
+				<div class="result-details">
+					<div class="detail-item">
+						<span class="detail-label">Cliente:</span>
+						<span id="resultClientName" class="detail-value"></span>
+					</div>
+					<div class="detail-item">
+						<span class="detail-label">CNPJ:</span>
+						<span id="resultClientCNPJ" class="detail-value"></span>
+					</div>
+					<div class="detail-item highlight">
+						<span class="detail-label">Prêmio:</span>
+						<span id="resultPrize" class="detail-value"></span>
+					</div>
+				</div>
+				<button id="closeResultBtn" class="result-modal-btn">Fechar</button>
+			</div>
+		</div>
+
+		<main class="container">
+			<!-- Cabeçalho com dados do cliente -->
+			<div id="clientInfo" class="client-info">
+				<span id="clientInfoText"></span>
+				<button id="editClientBtn" class="edit-client-btn">Editar</button>
+			</div>
+
+			<header class="header">
+				<h1>Roleta de Prêmios da Coneccta Sistemas</h1>
+				<p>Indique um cliente e gire para ganhar!</p>
+			</header>
+
+			<section class="wheel-section">
+				<div class="wheel-wrapper">
+					<div id="wheel" class="wheel" aria-label="Roleta de prêmios"></div>
+					<div class="pointer" aria-hidden="true"></div>
+				</div>
+				<button id="spinBtn" class="spin-btn">Girar roleta</button>
+			</section>
+
+			<section id="result" class="result" aria-live="polite"></section>
+
+			<section class="rules">
+				<h2>📜 REGULAMENTO – CAMPANHA DE INDICAÇÃO</h2>
+                <a></a>
+				<ul>
+                    <li>Se a indicação for válida → gira a roleta;</li>
+					<li>A campanha é válida por tempo determinado, conforme período divulgado pela Coneccta Sistemas;</li>
+					<li>O prêmio será informado imediatamente após a rodada da roleta ou realização do sorteio.</li>
+                    <li>Os prêmios poderão incluir brindes, descontos, benefícios no sistema, serviços ou vales, conforme descrito na campanha.</li>
+                    <li>O prêmio é pessoal e intransferível, salvo autorização da Coneccta Sistemas.</li>
+                    <li>Não seja cliente atual ou ex-cliente recente da Coneccta Sistemas.</li>
+                    <li>Caso duas pessoas indiquem o mesmo contato, será considerada válida a primeira indicação registrada.</li>
+                    <li>O cliente participante deverá indicar um novo contato interessado nos sistemas da Coneccta.</li>
+					<li>Envie uma captura de tela da roleta para validar sua indicação.</li>
+				</ul>
+			</section>
+		</main>
+	</body>
+</html>
