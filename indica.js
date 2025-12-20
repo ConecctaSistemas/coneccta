@@ -8,14 +8,11 @@ const segments = [
 	{ label: '🎉 1 mês de integração POS (1 CX)', key: 'site', color: '#2ecbd2', display: '🎁' }
 ];
 
-// Permitir qualquer prêmio
-// const allowedKeys = ['20', '50', '100']; // DESATIVADO - agora pode cair em qualquer prêmio
-
 // Variáveis globais
 let spinning = false;
 let totalTurns = 0;
 let currentAngle = 0;
-let segmentEls = []; // DECLARAR ANTES de usar
+let segmentEls = [];
 
 // Elementos do DOM - cliente
 const clientModal = document.getElementById('clientModal');
@@ -39,17 +36,12 @@ const resultPrize = document.getElementById('resultPrize');
 const closeResultBtn = document.getElementById('closeResultBtn');
 const fireworksContainer = document.getElementById('fireworksContainer');
 
-// Bloqueio de 24h
-// DESATIVADO PARA TESTES - Reativar quando em produção
-// Para reativar: Descomentar os blocos "BLOQUEIO ATIVADO" e comentar os blocos "BLOQUEIO DESATIVADO"
-const SPIN_LOCK_ENABLED = false; // MUDE PARA true PARA ATIVAR O BLOQUEIO DE 24h
+const SPIN_LOCK_ENABLED = true;
 
 const SPIN_LOCK_KEY = 'roleta_last_spin_at';
-const SPIN_LOCK_MS = 24 * 60 * 60 * 1000; // 24 horas
-// Persistência do último estado
+const SPIN_LOCK_MS = 24 * 60 * 60 * 1000;
 const SPIN_LAST_ANGLE_KEY = 'roleta_last_angle_deg';
 const SPIN_LAST_PRIZE_KEY = 'roleta_last_prize_key';
-// Cliente
 const CLIENT_NAME_KEY = 'roleta_client_name';
 const CLIENT_CNPJ_KEY = 'roleta_client_cnpj';
 
@@ -102,20 +94,16 @@ function updateClientInfoDisplay() {
 }
 
 function applyLockState() {
-	// BLOQUEIO DESATIVADO (comentar bloco abaixo e descomentar outro para ativar)
 	if (!SPIN_LOCK_ENABLED) {
 		spinBtn.disabled = false;
 		segmentEls.forEach(el => el.classList.remove('segment-winner'));
-		resultEl.textContent = ''; // limpar mensagem de bloqueio
+		resultEl.textContent = '';
 		return;
 	}
 
-	// BLOQUEIO ATIVADO (descomentar para ativar, comentar código acima)
-	/*
 	const ms = remainingMs();
 	if (ms > 0) {
 		spinBtn.disabled = true;
-		// Restaurar ângulo e mostrar último prêmio, se houver
 		const lastAngleRaw = localStorage.getItem(SPIN_LAST_ANGLE_KEY);
 		if (lastAngleRaw !== null) {
 			const angle = parseFloat(lastAngleRaw);
@@ -136,26 +124,22 @@ function applyLockState() {
 		resultEl.textContent = `Você já girou. Tente novamente em ${formatRemaining(ms)}.`;
 	} else {
 		spinBtn.disabled = false;
-		// remover destaque quando não estiver bloqueado
 		segmentEls.forEach(el => el.classList.remove('segment-winner'));
+		resultEl.textContent = '';
 	}
-	*/
 }
 
-// Utilitários matemáticos
-const degToRad = (deg) => (deg - 90) * Math.PI / 180; // topo = 0°
+const degToRad = (deg) => (deg - 90) * Math.PI / 180;
 
 function polarToCartesian(cx, cy, r, deg) {
 	const rad = degToRad(deg);
 	return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
-// Função utilitária: retorna índice do segmento por chave
 function findIndexByKey(key) {
 	return segments.findIndex(s => s.key === key);
 }
 
-// Constrói a roda em SVG com fatias e textos curvos
 function buildWheelSVG(container, size) {
 	const svgNS = 'http://www.w3.org/2000/svg';
 	const svg = document.createElementNS(svgNS, 'svg');
@@ -170,8 +154,8 @@ function buildWheelSVG(container, size) {
 	const cx = size / 2;
 	const cy = size / 2;
 	const rOuter = size * 0.48;
-	const rText = size * 0.32; // AJUSTADO: mais próximo do centro para não cortar texto
-	const perDeg = 360 / segments.length; // 60°
+	const rText = size * 0.32;
+	const perDeg = 360 / segments.length;
 
 	// Separadores visuais
 	for (let i = 0; i < segments.length; i++) {
@@ -209,8 +193,8 @@ function buildWheelSVG(container, size) {
 		segmentEls.push(path);
 
 		// Trilha do texto (arco interno) - AJUSTADO para não cortar
-		const arcStart = polarToCartesian(cx, cy, rText, startDeg + 5); // mais margem
-		const arcEnd = polarToCartesian(cx, cy, rText, endDeg - 5); // mais margem
+		const arcStart = polarToCartesian(cx, cy, rText, startDeg + 5);
+		const arcEnd = polarToCartesian(cx, cy, rText, endDeg - 5);
 		const arc = document.createElementNS(svgNS, 'path');
 		const arcId = `arc-${i}`;
 		arc.setAttribute('id', arcId);
@@ -230,7 +214,6 @@ function buildWheelSVG(container, size) {
 		rotor.appendChild(text);
 	});
 
-	// Hub central
 	const hub = document.createElementNS(svgNS, 'circle');
 	hub.setAttribute('cx', cx);
 	hub.setAttribute('cy', cy);
@@ -239,7 +222,6 @@ function buildWheelSVG(container, size) {
 	hub.classList.add('hub');
 	svg.appendChild(hub);
 
-	// Definições (gradiente do hub)
 	const defs = document.createElementNS(svgNS, 'defs');
 	const lg = document.createElementNS(svgNS, 'linearGradient');
 	lg.setAttribute('id', 'hubGrad');
@@ -256,20 +238,16 @@ function buildWheelSVG(container, size) {
 	return { svg, rotor };
 }
 
-// Construir SVG da roda com tamanho seguro
 let size = Math.min(wheelEl.clientWidth, wheelEl.clientHeight);
 if (size <= 0) {
-	size = 400; // fallback para tamanho padrão se clientWidth for 0
+	size = 400;
 }
 const { rotor } = buildWheelSVG(wheelEl, size);
-// Restaurar último ângulo e aplicar estado de bloqueio na carga
 restoreLastAngle();
 applyLockState();
 
-// Inicializar dados do cliente
 updateClientInfoDisplay();
 
-// Event listeners do formulário de cliente
 clientForm.addEventListener('submit', (e) => {
 	e.preventDefault();
 	const name = clientNameInput.value.trim();
@@ -286,31 +264,29 @@ editClientBtn.addEventListener('click', () => {
 	clientModal.classList.remove('hidden');
 });
 
-// Fechar popup de resultado
 closeResultBtn.addEventListener('click', () => {
 	resultModal.classList.add('hidden');
-	fireworksContainer.innerHTML = ''; // limpar fogos ao fechar
+	fireworksContainer.innerHTML = '';
 });
 
-// Função para criar fogos de artifício
 function createFireworks() {
 	const colors = ['#4c83ff', '#ff5a5a', '#45c977', '#f5a623', '#8b6cff', '#2ecbd2', '#ffd167'];
-	const particleCount = 60; // número de partículas por explosão
-	const explosions = 4; // número de explosões
+	const particleCount = 60;
+	const explosions = 4;
 
-	fireworksContainer.innerHTML = ''; // limpar fogos anteriores
+	fireworksContainer.innerHTML = '';
 
 	for (let e = 0; e < explosions; e++) {
 		setTimeout(() => {
-			const centerX = Math.random() * 100; // posição aleatória X (%)
-			const centerY = Math.random() * 100; // posição aleatória Y (%)
+			const centerX = Math.random() * 100;
+			const centerY = Math.random() * 100;
 
 			for (let i = 0; i < particleCount; i++) {
 				const particle = document.createElement('div');
 				particle.classList.add('firework');
 				
 				const angle = (Math.PI * 2 * i) / particleCount;
-				const velocity = 80 + Math.random() * 120; // velocidade da partícula
+			const velocity = 80 + Math.random() * 120;
 				const tx = Math.cos(angle) * velocity;
 				const ty = Math.sin(angle) * velocity;
 				
@@ -323,14 +299,12 @@ function createFireworks() {
 				
 				fireworksContainer.appendChild(particle);
 			}
-		}, e * 300); // espaçamento entre explosões
+		}, e * 300);
 	}
 }
 
-// Easing helpers - AJUSTADO PARA MAIS ACELERAÇÃO E DESACELERAÇÃO
 const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-// Novo easing para mais desaceleração no final
 const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
 
 function setRotorAngle(angleDeg) {
@@ -376,48 +350,37 @@ function animate(from, to, durationMs, easing = easeInOutCubic) {
 
 function spinControlled() {
 	if (spinning) return;
-	// BLOQUEIO DESATIVADO (remova este bloco e descomente o outro para ativar)
-	// Guardar: se bloqueado, prevenir giro e informar
-	// if (isLocked()) {
-	// 	applyLockState();
-	// 	return;
-	// }
+	if (isLocked()) {
+		applyLockState();
+		return;
+	}
 
 	spinning = true;
 	spinBtn.disabled = true;
-	// Registrar início do bloqueio de 24h (desativado para testes)
-	// setLastSpinAt();
+	setLastSpinAt();
 
-	// Escolher aleatoriamente qualquer prêmio
 	const targetIndex = Math.floor(Math.random() * segments.length);
 	const targetKey = segments[targetIndex].key;
 
-	// Cada segmento = 60°, centro do segmento = i*60 + 30
-	const perDeg = 360 / segments.length; // 60
-	const targetCenterDeg = targetIndex * perDeg + perDeg / 2; // i*60 + 30
+	const perDeg = 360 / segments.length;
+	const targetCenterDeg = targetIndex * perDeg + perDeg / 2;
 
-	// Ponteiro está no topo (0°). Para cair no target, definimos ângulo final com múltiplas voltas
-	// GIRO RÁPIDO DE 15 SEGUNDOS: calcular quantas voltas são necessárias
-	const fastSpinDuration = 15000; // 15 segundos de giro rápido
-	const decelDuration = 3000; // 3 segundos de desaceleração
-	const rotationsPerSecond = 3; // 3 voltas por segundo durante o giro rápido
-	const fastTurns = (fastSpinDuration / 1000) * rotationsPerSecond; // total de voltas em 15s
-	const fastSpinDeg = fastTurns * 360; // graus no giro rápido
-	const finalDeg = -(fastSpinDeg + targetCenterDeg); // posição final
+	const fastSpinDuration = 15000;
+	const decelDuration = 3000;
+	const rotationsPerSecond = 3;
+	const fastTurns = (fastSpinDuration / 1000) * rotationsPerSecond;
+	const fastSpinDeg = fastTurns * 360;
+	const finalDeg = -(fastSpinDeg + targetCenterDeg);
 
-	// Leve blur durante giro
 	rotor.style.filter = 'blur(1.1px)';
 
-	// FASE 1: Giro rápido constante por 30 segundos (linear)
-	animate(currentAngle, currentAngle - fastSpinDeg, fastSpinDuration, (t) => t) // linear
+	animate(currentAngle, currentAngle - fastSpinDeg, fastSpinDuration, (t) => t)
 		.then(() => {
-			// FASE 2: Desaceleração até o prêmio
 			return animate(currentAngle, finalDeg, decelDuration, easeOutQuart);
 		})
 		.then(() => {
-			// Remover blur e aplicar pequeno bounce de inércia
 			rotor.style.filter = 'none';
-			const overshoot = (Math.random() > 0.5 ? 1 : -1) * 6; // ±6°
+			const overshoot = (Math.random() > 0.5 ? 1 : -1) * 6;
 			return animate(finalDeg, finalDeg + overshoot, 340, easeOutCubic)
 				.then(() => animate(finalDeg + overshoot, finalDeg, 280, easeOutCubic));
 		})
@@ -425,27 +388,20 @@ function spinControlled() {
 			const prize = segments[targetIndex].label;
 			resultEl.textContent = `Parabéns! Você ganhou: ${prize} na mensalidade do próximo mês.`;
 			
-			// Exibir popup com resultado
 			const { name, cnpj } = getClientData();
 			resultClientName.textContent = name || 'Cliente não informado';
 			resultClientCNPJ.textContent = cnpj || 'CNPJ não informado';
 			resultPrize.textContent = prize;
 			resultModal.classList.remove('hidden');
 			
-			// Disparar fogos de artifício
 			createFireworks();
 			
-			// Persistir estado final
 			localStorage.setItem(SPIN_LAST_ANGLE_KEY, String(finalDeg));
 			localStorage.setItem(SPIN_LAST_PRIZE_KEY, targetKey);
 			highlightWinner(targetIndex);
-			spinning = false; // Mantém desativado para respeitar 1 giro por indicação
-			// Re-habilitar botão para novos testes (desativado para testes)
-			spinBtn.disabled = false;
-			// Estado de bloqueio permanece até expirar (24h)
+			spinning = false;
 			applyLockState();
 		});
 }
 
-// LISTENER DO BOTÃO
 spinBtn.addEventListener('click', spinControlled);
