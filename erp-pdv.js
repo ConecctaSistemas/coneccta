@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cards.forEach((card, index) => {
         setTimeout(() => card.classList.add('visible'), index * 240);
     });
+
     // modal elements
     const modal = document.getElementById('modal-contratar');
     const modalPlanName = document.getElementById('modal-plan-name');
