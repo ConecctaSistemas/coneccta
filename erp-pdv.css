@@ -112,6 +112,14 @@ body{
     font-size:clamp(12px,1.6vw,16px);
 }
 
+.clientes-ativos{
+    color:#2d5a9b;
+    font-size:clamp(12px,1.8vw,14px);
+    margin-bottom:10px;
+    text-align:center;
+    font-weight:600;
+}
+
 .card span{
     color:var(--dark);
     font-size:clamp(24px,4.5vw,40px);
