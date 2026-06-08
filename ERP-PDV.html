@@ -119,6 +119,32 @@
 
 </section>
 
+</section>
+
+<!-- Modal contratar -->
+<div id="modal-contratar" class="modal hidden" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" aria-label="Fechar">×</button>
+        <h3 id="modal-title">Contratar plano <span id="modal-plan-name"></span></h3>
+        <form id="form-contratar">
+            <label for="cnpj">CNPJ
+                <input type="text" name="cnpj" id="cnpj" placeholder="00.000.000/0000-00" required>
+            </label>
+            <label for="email">Email
+                <input type="email" name="email" id="email" placeholder="seu@empresa.com" required>
+            </label>
+            <label for="segmento">Segmento do comércio
+                <input type="text" name="segmento" id="segmento" placeholder="Ex: Mercadinho, Loja de roupas, Restaurante" required>
+            </label>
+            <input type="hidden" id="modal-plan" name="plan" value="">
+            <div class="modal-actions">
+                <button type="submit" class="btn-submit">Enviar</button>
+                <button type="button" class="btn-cancel">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="erp-pdv.js"></script>
 </body>
 </html>
