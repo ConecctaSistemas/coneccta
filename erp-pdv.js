@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const phoneNumber = '5511999999999'; // substitua pelo número no formato internacional sem '+' ou espaços (ex: 5511999999999)
-
+    const phoneNumber = '5575998808146'; 
     const cards = document.querySelectorAll('.card');
 
     cards.forEach((card, index) => {
