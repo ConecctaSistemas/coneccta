@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const plan = btn.dataset.plan || btn.closest('.card')?.querySelector('h2 span')?.textContent?.trim() || '';
-            const message = `Olá, tenho interesse neste plano (${plan}), gostaria de saber quais as condições para contratar.`;
+            const message = `Olá, tenho interesse neste plano (${plan}), gostaria de saber quais as condições para contratação.`;
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         });
