@@ -42,14 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const cnpj = document.getElementById('cnpj').value.trim();
         const email = document.getElementById('email').value.trim();
         const segmento = document.getElementById('segmento').value.trim();
+        const cidade = document.getElementById('cidade').value.trim();
+        const estado = document.getElementById('estado').value.trim();
         const plan = modalPlanInput.value || '';
 
-        if(!cnpj || !email || !segmento){
+        if(!cnpj || !email || !segmento || !cidade || !estado){
             alert('Por favor, preencha todos os campos.');
             return;
         }
 
-        const message = `Olá, tenho interesse no plano (${plan}).%0A%0ACNPJ: ${cnpj}%0AEmail: ${email}%0ASegmento: ${segmento}%0A%0AGostaria de saber quais as condições para contratação.`;
+        const message = `Olá, tenho interesse no plano (${plan}).%0A%0ACNPJ: ${cnpj}%0AEmail: ${email}%0ASegmento: ${segmento}%0ACidade: ${cidade}%0AEstado: ${estado}%0A%0AGostaria de saber quais as condições para contratação.`;
         const url = `https://wa.me/${phoneNumber}?text=${message}`;
         window.open(url, '_blank');
         closeModal();
